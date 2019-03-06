@@ -1,0 +1,16 @@
+ext{
+    serenityCoreVersion = '2.0.40'
+    junitVersion='4.12'
+    assertJVersion='3.11.1'
+
+    libs = [ test: [
+                    serenity: [
+                            core: "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
+                            junit: "net.serenity-bdd:serenity-junit:${serenityCoreVersion}",
+                            restAssured: "net.serenity-bdd:serenity-rest-assured:${serenityCoreVersion}"
+                    ],
+                    junit: "junit:junit:${junitVersion}",
+                    assertj: "org.assertj:assertj-core:${assertJVersion}"
+            ]
+    ]
+}

@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import org.junit.BeforeClass;
 
 public class TestSetup {
+    // TODO: would prefer Serenity properties over this
     @BeforeClass
     public static void setup() {
         String port = System.getProperty("server.port");

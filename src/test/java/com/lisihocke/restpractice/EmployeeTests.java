@@ -64,6 +64,7 @@ public class EmployeeTests extends TestSetup {
         requestBody.addProperty("lastName", "Baker");
         requestBody.addProperty("role", "baker");
 
+        // TODO: can we get a response without g/w/t? this is just setup
         int employeeId = SerenityRest.
                 given().
                     contentType("application/json").
@@ -80,5 +81,16 @@ public class EmployeeTests extends TestSetup {
                     delete("employees/{id}").
                 then().
                     statusCode(204);
+
+        // TODO: can we check that it's really gone now?
+        SerenityRest.
+                given().
+                    pathParam("id", employeeId).
+                when().
+                    get("employees/{id}").
+                then().
+                    statusCode(404);
+        // TODO: assert for the content of the response
+        // TODO: service responds plain text, but we want it to be JSON!
     }
 }

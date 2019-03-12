@@ -19,7 +19,7 @@ class OrderResourceAssembler implements ResourceAssembler<Order, Resource<Order>
         );
 
         // Conditional links based on state of the order
-        if (order.getStatus() == Status.IN_PROGRESS) {
+        if (order.getStatus() == OrderStatus.IN_PROGRESS) {
             orderResource.add(
                     linkTo(methodOn(OrderController.class)
                             .cancel(order.getId())).withRel("cancel"));

@@ -20,9 +20,9 @@ public class Order {
     private @Id @GeneratedValue Long id;
 
     private String description;
-    private Status status;
+    private OrderStatus status;
 
-    public Order(String description, Status status) {
+    public Order(String description, OrderStatus status) {
         this.description = description;
         this.status = status;
     }

@@ -1,5 +1,6 @@
 package com.lisihocke.restpractice;
 
+import io.restassured.http.ContentType;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.BeforeClass;
@@ -7,13 +8,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.google.gson.JsonObject;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(SerenityRunner.class)
 public class EmployeeTests extends TestSetup {
 
-    private static final String EXISTING_EMPLOYEE = "1";
-    private static final String NON_EXISTING_EMPLOYEE = "999";
+    private static final String EXISTING_EMPLOYEE_ID = "1";
+    private static final String NON_EXISTING_EMPLOYEE_ID = "999";
+    private String NON_EXISTING_EMPLOYEE_MESSAGE = "Could not find employee ";
 
     @BeforeClass
     public static void applicationShouldRun() {
@@ -25,9 +28,10 @@ public class EmployeeTests extends TestSetup {
     @Test
     public void shouldRetrieveDetailsFromExistingEmployee() {
         SerenityRest.
-                given().pathParam("id", EXISTING_EMPLOYEE).
+                given().pathParam("id", EXISTING_EMPLOYEE_ID).
                 when().get("employees/{id}").
                 then().statusCode(200).
+                    contentType(ContentType.JSON).
                     body("firstName", is("Bilbo")).
                     body("lastName", is("Baggins")).
                     body("role", is("burglar")).
@@ -37,9 +41,9 @@ public class EmployeeTests extends TestSetup {
     @Test
     public void shouldShowErrorMessageForNonExistingEmployee() {
         SerenityRest.
-                given().pathParam("id", NON_EXISTING_EMPLOYEE).
+                given().pathParam("id", NON_EXISTING_EMPLOYEE_ID).
                 when().get("employees/{id}").
-                then().statusCode(404).body("message", is("Could not find employee " + NON_EXISTING_EMPLOYEE));
+                then().statusCode(404).contentType(ContentType.TEXT).body(containsString(NON_EXISTING_EMPLOYEE_MESSAGE + NON_EXISTING_EMPLOYEE_ID));
     }
 
     @Test
@@ -50,6 +54,7 @@ public class EmployeeTests extends TestSetup {
                 given().contentType("application/json").body(employeePayload.toString()).
                 when().post("employees").
                 then().statusCode(201).
+                    contentType(ContentType.JSON).
                     body("firstName", is("Cindy")).
                     body("lastName", is("Carter")).
                     body("role", is("Chef")).
@@ -74,9 +79,7 @@ public class EmployeeTests extends TestSetup {
         SerenityRest.
                 given().pathParam("id", employeeId).
                 when().get("employees/{id}").
-                then().statusCode(404);
-        // TODO: assert for the content of the response
-        // TODO: service responds plain text, but we want it to be JSON!
+                then().statusCode(404).contentType(ContentType.TEXT).body(containsString(NON_EXISTING_EMPLOYEE_MESSAGE + employeeId));
     }
 
     private int createNewEmployeeAndGetId() {

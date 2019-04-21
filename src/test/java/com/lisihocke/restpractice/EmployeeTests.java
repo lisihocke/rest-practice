@@ -44,17 +44,17 @@ public class EmployeeTests extends TestSetup {
 
     @Test
     public void shouldCreateNewEmployee() {
-        JsonObject requestBody = buildNewEmployeeJsonObject("Cindy", "Carter", "Chef");
+        JsonObject employeePayload = buildNewEmployeeJsonObject("Cindy", "Carter", "Chef");
 
         int employeeId = SerenityRest.
-                given().contentType("application/json").body(requestBody.toString()).
+                given().contentType("application/json").body(employeePayload.toString()).
                 when().post("employees").
                 then().statusCode(201).
                     body("firstName", is("Cindy")).
                     body("lastName", is("Carter")).
                     body("role", is("Chef")).
                     body("name", is("Cindy Carter")).
-                    extract().path("id");;
+                    extract().path("id");
 
         SerenityRest.
                 given().pathParam("id", employeeId).
@@ -80,20 +80,20 @@ public class EmployeeTests extends TestSetup {
     }
 
     private int createNewEmployeeAndGetId() {
-        JsonObject requestBody = buildNewEmployeeJsonObject("Betty", "Barclay", "Bartender");
+        JsonObject employeePayload = buildNewEmployeeJsonObject("Betty", "Barclay", "Bartender");
 
         // TODO: can we get a response without given/when/then? this is just the setup
         return SerenityRest.
-                given().contentType("application/json").body(requestBody.toString()).
+                given().contentType("application/json").body(employeePayload.toString()).
                 when().post("employees").
                 then().extract().path("id");
     }
 
     private JsonObject buildNewEmployeeJsonObject(String firstName, String lastName, String role) {
-        JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("firstName", firstName);
-        requestBody.addProperty("lastName", lastName);
-        requestBody.addProperty("role", role);
-        return requestBody;
+        JsonObject payload = new JsonObject();
+        payload.addProperty("firstName", firstName);
+        payload.addProperty("lastName", lastName);
+        payload.addProperty("role", role);
+        return payload;
     }
 }

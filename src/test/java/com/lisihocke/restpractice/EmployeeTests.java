@@ -34,7 +34,7 @@ public class EmployeeTests extends TestSetup {
                     contentType(ContentType.JSON).
                     body("firstName", is("Bilbo")).
                     body("lastName", is("Baggins")).
-                    body("role", is("burglar")).
+                    body("role", is("Burglar")).
                     body("name", is("Bilbo Baggins"));
     }
 
@@ -65,6 +65,32 @@ public class EmployeeTests extends TestSetup {
                 given().pathParam("id", employeeId).
                 when().get("employees/{id}").
                 then().statusCode(200);
+    }
+
+    @Test
+    public void shouldUpdateEmployee() {
+        int employeeId = createNewEmployeeAndGetId();
+        JsonObject employeePayload = buildNewEmployeeJsonObject("Dora", "Devonport", "Designer");
+
+        SerenityRest.
+                given().pathParam("id", employeeId).contentType("application/json").body(employeePayload.toString()).
+                when().put("employees/{id}").
+                then().statusCode(201).
+                    contentType(ContentType.JSON).
+                    body("firstName", is("Dora")).
+                    body("lastName", is("Devonport")).
+                    body("role", is("Designer")).
+                    body("name", is("Dora Devonport"));
+
+        SerenityRest.
+                given().pathParam("id", employeeId).
+                when().get("employees/{id}").
+                then().statusCode(200).
+                    contentType(ContentType.JSON).
+                    body("firstName", is("Dora")).
+                    body("lastName", is("Devonport")).
+                    body("role", is("Designer")).
+                    body("name", is("Dora Devonport"));
     }
 
     @Test
